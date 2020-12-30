@@ -26,10 +26,7 @@ int quadrant(int x, int y, int width, int high, int pace) {
 			return 2;
 		}
 	}
-}
-
-bool cmp(int a, int b) {
-	return true;
+	return 0;
 }
 
 double pace(int a, int b) {

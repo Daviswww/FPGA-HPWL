@@ -6,10 +6,11 @@
 using namespace std;
 
 int main(){
+	int count[5] = {0};
 	string tmp, str, v[10000];
 	CLB_Dim clb_dim;
 	Num_IO num_io;
-	int p, n;
+	int p, n, num, set;
 	int q1 = 0, q2 = 0, q3 = 0, q4 = 0;
 	map<string, int> input;
 	ifstream fin;
@@ -33,32 +34,42 @@ int main(){
 		fin >> tmp >> x >> y;
 		q = quadrant(x, y, num_io.width, num_io.high, p);
 		input[tmp] = q;
-		cout << input[tmp] << endl;
 	}
 	fin.close();
 	fin.open("../benchmarks/alu4_4.nets");
 	fin >> n;
-	for(int i = 0; i < n; i++){
-		cout << ".";
-		int num = 0, set = 0;
+	for(int i = 0; i < n; i++){	
+		num = 0, set = 0;
 		getline(fin, str);
 		
 		while(str.find(" ") != -1){
 			v[num++] = tmp.assign(str, 0, str.find(" "));
 			str.erase(0, str.find(" ")+1);
+			if(input.find(v[i]) == input.end()){
+				input[v[i]] = 0;
+			}
 //			cout << v[num-1] << endl;
 		}
-		
-		cout << input[v[1]] << ":" << input[v[num]] << endl;
-//
-//		for(int i = 1; i < num; i++){
-//			input[v[i]] = set;
-//		}
+		for(int i = 1; i < num; i++){
+			if(input[v[i]] > 0) {
+				set = input[v[i]];
+				cout << "@"<< set <<"@";
+				break;
+			}
+		}
+		if(set == 0){
+			break;
+		}
+		for(int i = 1; i < num; i++){
+			if(input[v[i]] == 0) {
+				input[v[i]] = set;
+			}
+			count[input[v[i]]]++;
+			printf("<%s:%d>", v[i].c_str(), input[v[i]]);
+		}
 	}
-	
-	cout << input.size();
-	printf("%d:::%d:::%d:::%d::::::%d", q1, q2, q3, q4, input.size());
-	
+
+	cout << input.size() << endl;
 	return 0;	
 }
 
