@@ -1,6 +1,7 @@
-int quadrant(int x, int y, int width, int high, int pace) {
-	int a = pace * width + pace;
-	int b = pace * high + pace;
+
+int quadrant(double x, double y, int width, int high, double pace) {
+	double a = pace * width + pace;
+	double b = pace * high + pace;
 	if(x == 0){
 		if(y > b / 2) {
 			return 2;
@@ -26,6 +27,7 @@ int quadrant(int x, int y, int width, int high, int pace) {
 			return 2;
 		}
 	}
+	std::cout << a <<"#" << b << ">>";
 	return 0;
 }
 
