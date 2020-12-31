@@ -1,4 +1,3 @@
-
 int quadrant(double x, double y, int width, int high, double pace) {
 	double a = pace * width + pace;
 	double b = pace * high + pace;
