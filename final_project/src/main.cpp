@@ -36,7 +36,7 @@ int main(){
 	map<string, int> input;
 	
 	ifstream fin;
-	fin.open("../benchmarks/alu4_4.info");
+	fin.open("../benchmarks/tseng_4.info");
 	// CLB_Dim
 	fin >> tmp >> clb_dim.width >> clb_dim.high;
 	// Num_I/O_Pad
@@ -67,7 +67,7 @@ int main(){
 	}
 	fin.close();
 	// Nets
-	fin.open("../benchmarks/alu4_4.nets");
+	fin.open("../benchmarks/tseng_4.nets");
 	fin >> n;
 	for(int j = 0; j < n; j++){
 		num = 0, set = 0;
@@ -131,28 +131,7 @@ int main(){
 	for(int i = 0; i < 5; i++){
 		cout << i << ":::" << count[i] << ":::" << count[i]/2 << endl;
 	}
-	int sc = sqrt(count[1]/2);
 
-	clb.right.top = sc;
-	clb.right.bottom = clb_dim.high - clb.right.top;
-	
-	for(int i = 0; clb.right.top * clb.top.right < count[1]/2; i++){
-		clb.top.right = ((count[1]/2) / clb.right.top) + i;
-		clb.top.left = clb_dim.width - clb.top.right;
-	}
-
-	clb.bottom.right = sc + 1;
-	clb.bottom.left = clb_dim.width - clb.bottom.right;
-	
-	for(int i = 0; clb.left.top * clb.top.left < count[2]/2; i++){
-		clb.left.top = ((count[2]/2) / clb.top.right) + i;
-		clb.left.bottom = clb_dim.high - clb.left.top;
-	}
-	
-	cout << "1->" << clb.right.top << ":" << clb.top.right << "->" << clb.right.top * clb.top.right <<endl;
-	cout << "2->" << clb.top.left << ":" << clb.left.top << "->" << clb.top.left * clb.left.top <<endl;
-	cout << "3->" << clb.left.bottom  << ":" << clb.bottom.left << "->" << clb.left.bottom * clb.bottom.left <<endl;
-	cout << "4->" << clb.bottom.right << ":" << clb.right.bottom << "->" << clb.bottom.right * clb.right.bottom <<endl;
 	cout  << "w:" << clb_dim.width << "h:" << clb_dim.high;
 	
 	// Quadrant
@@ -162,17 +141,15 @@ int main(){
 		}
 	}
 	cout << "GG" << endl;
-	clb_dim.high = 50;
-	clb_dim.width = 30;
 	
 	int mm = max(clb_dim.high, clb_dim.width);
 	make1(quad.q1, 1, clb_dim);
-//	make2(quad.q2, 2, clb_dim);
-//	make3(quad.q3, 3, clb_dim);
-//	make(quad.q4, 4, max(clb_dim.high, clb_dim.width));
+	make2(quad.q2, 2, clb_dim);
+	make3(quad.q3, 3, clb_dim);
+	make4(quad.q4, 4, clb_dim);
 	puts("");
-	for(int i = 1; i < clb_dim.high; i++){
-		for(int j = 1; j <= clb_dim.width; j++){
+	for(int i = 0; i <= clb_dim.high+1; i++){
+		for(int j = 0; j <= clb_dim.width+1; j++){
 			printf("%2d", clb_array[i][j]);
 		}
 		puts("");
@@ -198,12 +175,59 @@ int minQuad(Quad quad){
 	}
 	return tag;
 }
-
+/*
+11 12 13 14
+21 22 23 24
+31 32 33 34 
+41 42 43 44
+51 52 53 54
+*/
 void make1(queue<string> q, int t, CLB_Dim cd){
 	int maxn = max(cd.high, cd.width);
-	for(int i = cd.width; i >=  0; i--){
-		for(int j = cd.high; j >= i; j--){
-			clb_array[i][j] = 3;
+	string qtmp;
+	for(int i = 1; i <= maxn; i++){
+		if(q.empty()){
+			break;
+		}
+		for(int j = 1; j <= min(cd.width, i) && i <= cd.high; j++){
+			if(clb_array[cd.high-i+1][cd.width-j+1] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-i+1;
+					node[qtmp].y = cd.width-j+1;
+					clb_array[cd.high-i+1][cd.width-j+1] = t;
+				}else{
+					break;
+				}			
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-i+1;
+					node[qtmp].y = cd.width-j+1;
+					clb_array[cd.high-i+1][cd.width-j+1] = t;
+				}
+			}
+		}
+		for(int j = 1; j <= min(cd.high, i) && i <= cd.width; j++){
+			if(clb_array[cd.high-j+1][cd.width-i+1] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-j+1;
+					node[qtmp].y = cd.width-i+1;
+					clb_array[cd.high-j+1][cd.width-i+1] = t;
+				}else{
+					break;
+				}
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-j+1;
+					node[qtmp].y = cd.width-i+1;
+					clb_array[cd.high-j+1][cd.width-i+1] = t;
+				}
+			}
 		}
 	}
 	return;
@@ -211,46 +235,154 @@ void make1(queue<string> q, int t, CLB_Dim cd){
 
 void make2(queue<string> q, int t, CLB_Dim cd){
 	int maxn = max(cd.high, cd.width);
+	string qtmp;
 	for(int i = 1; i <= maxn; i++){
-		for(int j = cd.width; j > cd.width - i && i <= cd.high; j--){
-			clb_array[i][j] = 3;
+		if(q.empty()){
+			break;
 		}
-		for(int j = 1; j < i && i <= cd.width; j++){
-			clb_array[j][cd.width-i+1] = 1;
+		for(int j = 1; j <= min(cd.width, i) && i <= cd.high; j++){
+			if(clb_array[i][cd.width-j+1] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = i;
+					node[qtmp].y = cd.width-j+1;
+					clb_array[i][cd.width-j+1] = t;
+				}else{
+					break;
+				}
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = i;
+					node[qtmp].y = cd.width-j+1;
+					clb_array[i][cd.width-j+1] = t;
+				}
+			}
+		}
+		for(int j = 1; j <= min(cd.high, i) && i <= cd.width; j++){
+			if(clb_array[j][cd.width-i+1] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = j;
+					node[qtmp].y = cd.width-i+1;
+					clb_array[j][cd.width-i+1] = t;
+				}else{
+					break;
+				}
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = j;
+					node[qtmp].y = cd.width-i+1;
+					clb_array[j][cd.width-i+1] = t;
+				}
+			}
 		}
 	}
 	return;
 }
+
 
 void make3(queue<string> q, int t, CLB_Dim cd){
 	int maxn = max(cd.high, cd.width);
+	string qtmp;
 	for(int i = 1; i <= maxn; i++){
-		for(int j = 1; j < i && i <= cd.width; j++){
-			if(clb_array[j][i] == 0){
-				if(!q.empty()){
-					clb_array[j][i] = t;
-					q.pop();
-				}
-				if(!q.empty()){
-					clb_array[j][i] = t;
-					q.pop();
-				}
-			}
+		if(q.empty()){
+			break;
 		}
-		for(int j = 1; j <= i && i <= cd.high; j++){
+		for(int j = 1; j <= min(cd.width, i) && i <= cd.high; j++){
 			if(clb_array[i][j] == 0){
 				if(!q.empty()){
-					clb_array[i][j] = t;
+					qtmp = q.front();
 					q.pop();
+					node[qtmp].x = i;
+					node[qtmp].y = j;
+					clb_array[i][j] = t;
+				}else{
+					break;
 				}
 				if(!q.empty()){
-					clb_array[i][j] = t;
+					qtmp = q.front();
 					q.pop();
+					node[qtmp].x = i;
+					node[qtmp].y = j;
+					clb_array[i][j] = t;
 				}
 			}
 		}
-
+		for(int j = 1; j <= min(cd.high, i) && i <= cd.width; j++){
+			if(clb_array[j][i] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = j;
+					node[qtmp].y = i;
+					clb_array[j][i] = t;
+				}else{
+					break;
+				}
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = j;
+					node[qtmp].y = i;
+					clb_array[j][i] = t;
+				}
+			}
+		}
 	}
 	return;
 }
 
+void make4(queue<string> q, int t, CLB_Dim cd){
+	int maxn = max(cd.high, cd.width);
+	string qtmp;
+	for(int i = 1; i <= maxn; i++){
+		if(q.empty()){
+			break;
+		}
+		for(int j = 1; j <= min(cd.width, i) && i <= cd.high; j++){
+			if(clb_array[cd.high-i+1][j] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-i+1;
+					node[qtmp].y = j;
+					clb_array[cd.high-i+1][j] = t;
+				}else{
+					break;
+				}
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-i+1;
+					node[qtmp].y = j;
+					clb_array[cd.high-i+1][j] = t;
+				}
+			}
+		}
+		for(int j = 1; j <= min(cd.high, i) && i <= cd.width; j++){
+			if(clb_array[cd.high-j+1][i] == 0){
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-j+1;
+					node[qtmp].y = i;
+					clb_array[cd.high-j+1][i] = t;
+				}else{
+					break;
+				}
+				if(!q.empty()){
+					qtmp = q.front();
+					q.pop();
+					node[qtmp].x = cd.high-j+1;
+					node[qtmp].y = i;
+					clb_array[cd.high-j+1][i] = t;
+				}
+			}
+		}
+	}
+	return;
+}
