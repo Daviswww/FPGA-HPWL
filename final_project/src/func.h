@@ -40,3 +40,4 @@ double pace(int a, int b) {
 	}
 }
 
+

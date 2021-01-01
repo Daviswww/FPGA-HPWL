@@ -32,4 +32,3 @@ struct CLB{
 	Hight right;
 };
 
-
