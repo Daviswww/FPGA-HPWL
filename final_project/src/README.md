@@ -81,3 +81,6 @@ Execute `main` path:`FPGA-HPWL/final_project/bin`
 Input path:`FPGA-HPWL/final_project/benchmarks`
 Output path:`FPGA-HPWL/final_project/outputs`
 
+#### #Limit
+input: inst[10000]
+clb_array[500][500]
