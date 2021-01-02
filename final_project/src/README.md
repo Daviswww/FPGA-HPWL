@@ -1,4 +1,10 @@
 # FPGA project
+## Motivation：
+希望讓節點越靠近自己的點近一點，關西越遠的靠近越中間。
+
+## Main idea:
+將 CLB 切成四個象限，在輸入的時候分別將每個 Num_I/O_Pad 都標記屬於第幾象限，然後在輸入 Net 的時候把自己標記成父結點的象限以此類推，最後在放net 時由四個角開始擺放，由於題目設定左下角為起始點(1, 1)，因此第一象限從右下角擺放，第二象限從右上角擺放，第三象限從左上角擺放，第四象限從左下角擺放，擺放的放式下面會介紹。由於利用父節點做檢查，所以關係越遠的點會越靠近中間，有可能可以讓距離期三個象限更近一點。
+
 ## Introduction
 In this project, you are asked to write a C/C++ program to solve the placement problem for LUT-based FPGA after technology mapping. The goal is to place all instances (i.e., LUTs and 1-bit flip-flops) of a netlist onto CLB locations of a target FPGA with all PI/POs (i.e., primary inputs and primary outputs) already pre-placed so that the total wirelength is minimized. The wirelength of each net is estimated by its HPWL.
 ![](image/fn4ucJn.png)
