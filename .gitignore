@@ -1,1 +1,4 @@
-*exe
+*.exe
+*.DS_Store
+.vscode
+/**/tempCodeRunnerFile.cpp
