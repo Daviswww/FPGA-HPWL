@@ -22,9 +22,11 @@ void make2(queue<string> q, int t, CLB_Dim cd);
 void make3(queue<string> q, int t, CLB_Dim cd);
 void make4(queue<string> q, int t, CLB_Dim cd);
 
-int main(){
+int main(int argc, char** argv){
 	int count[5] = {0};
 	string tmp, str, v[10000], inst[10000];
+	string dir = "../benchmarks/", info = ".info", nets = ".nets", path = "";
+	string outdir = "../outputs/", placement = ".placement";
 	CLB_Dim clb_dim;
 	Num_IO num_io;
 	CLB clb;
@@ -34,9 +36,10 @@ int main(){
 	int q, n, pi, po, num, set, Num_Inst = 0, maxn = 1e9;
 	int q1 = 0, q2 = 0, q3 = 0, q4 = 0;
 	map<string, int> input;
-	
 	ifstream fin;
-	fin.open("../benchmarks/s38417_4.info");
+	ofstream fout;
+	path = dir + argv[1] + info;
+	fin.open(path);
 	// CLB_Dim
 	fin >> tmp >> clb_dim.width >> clb_dim.high;
 	// Num_I/O_Pad
@@ -67,7 +70,8 @@ int main(){
 	}
 	fin.close();
 	// Nets
-	fin.open("../benchmarks/s38417_4.nets");
+	path = dir + argv[1] + nets;
+	fin.open(path);
 	fin >> n;
 	for(int j = 0; j < n; j++){
 		num = 0, set = 0;
@@ -90,7 +94,7 @@ int main(){
 			}
 		}
 	}
-	cout << "done!" << endl;
+	cout << argv[1] <<" done!" << endl;
 	// Classification
 	for(int i = 0; i < Num_Inst; i++){
 		count[input[inst[i]]]++;
@@ -140,9 +144,7 @@ int main(){
 			clb_array[i][j] = 0;
 		}
 	}
-	cout << "GG" << endl;
-	
-	int mm = max(clb_dim.high, clb_dim.width);
+	// Make
 	make1(quad.q1, 1, clb_dim);
 	make2(quad.q2, 2, clb_dim);
 	make3(quad.q3, 3, clb_dim);
@@ -154,7 +156,14 @@ int main(){
 		}
 		puts("");
 	}
-	
+	// Output
+	path = outdir + argv[1] + placement;
+	fout.open(path);
+
+	for(int i = 0; i <  Num_Inst; i++){
+		fout << inst[i] << " " << node[inst[i]].x << " " << node[inst[i]].y << endl;
+	}
+
 	return 0;
 }
 
@@ -283,7 +292,6 @@ void make2(queue<string> q, int t, CLB_Dim cd){
 	}
 	return;
 }
-
 
 void make3(queue<string> q, int t, CLB_Dim cd){
 	int maxn = max(cd.high, cd.width);
