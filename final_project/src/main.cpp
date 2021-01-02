@@ -36,7 +36,7 @@ int main(){
 	map<string, int> input;
 	
 	ifstream fin;
-	fin.open("../benchmarks/tseng_4.info");
+	fin.open("../benchmarks/s38417_4.info");
 	// CLB_Dim
 	fin >> tmp >> clb_dim.width >> clb_dim.high;
 	// Num_I/O_Pad
@@ -67,7 +67,7 @@ int main(){
 	}
 	fin.close();
 	// Nets
-	fin.open("../benchmarks/tseng_4.nets");
+	fin.open("../benchmarks/s38417_4.nets");
 	fin >> n;
 	for(int j = 0; j < n; j++){
 		num = 0, set = 0;
