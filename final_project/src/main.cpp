@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 	fin >> tmp >> Num_PI;
 	for(int i = 0; i < Num_PI; i++){
 		fin >> tmp >> y >> x;
-		q = quadrant(x, y, num_io.width, num_io.high, p);
+		q = quadrant(y, x, num_io.width, num_io.high, p);
 		input[tmp] = q;
 		count[q]++;
 	}
@@ -57,7 +57,7 @@ int main(int argc, char** argv){
 	fin >> tmp >> Num_PO;
 	for(int i = 0; i < Num_PO; i++){
 		fin >> tmp >> y >> x;
-		q = quadrant(x, y, num_io.width, num_io.high, p);
+		q = quadrant(y, x, num_io.width, num_io.high, p);
 		input[tmp] = q;
 		count[q]++;
 	}
