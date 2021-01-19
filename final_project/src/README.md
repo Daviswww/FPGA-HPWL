@@ -88,5 +88,6 @@ Input path:`FPGA-HPWL/final_project/benchmarks`
 Output path:`FPGA-HPWL/final_project/outputs`
 
 #### #Limit
-input: inst[10000]
-clb_array[500][500]
+input: 
+inst[100000]
+clb_array[1000][1000]
