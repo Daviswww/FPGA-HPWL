@@ -15,7 +15,7 @@ struct Node{
 	int y;
 };
 map<string, Node> node;
-int clb_array[500][500];
+int clb_array[1000][1000];
 int minQuad(Quad q);
 void make1(queue<string> q, int t, CLB_Dim cd);
 void make2(queue<string> q, int t, CLB_Dim cd);
@@ -24,7 +24,7 @@ void make4(queue<string> q, int t, CLB_Dim cd);
 
 int main(int argc, char** argv){
 	int count[5] = {0};
-	string tmp, str, v[10000], inst[10000];
+	string tmp, str, v[100000], inst[100000];
 	string dir = "../benchmarks/", info = ".info", nets = ".nets", path = "";
 	string outdir = "../outputs/", placement = ".placement";
 	CLB_Dim clb_dim;
@@ -41,14 +41,14 @@ int main(int argc, char** argv){
 	path = dir + argv[1] + info;
 	fin.open(path);
 	// CLB_Dim
-	fin >> tmp >> clb_dim.width >> clb_dim.high;
+	fin >> tmp >> clb_dim.high >> clb_dim.width;
 	// Num_I/O_Pad
-	fin >> tmp >> num_io.width >> num_io.high;
+	fin >> tmp >> num_io.high >> num_io.width;
 	p = pace(clb_dim.width, num_io.width);
 	// Num_PI
 	fin >> tmp >> Num_PI;
 	for(int i = 0; i < Num_PI; i++){
-		fin >> tmp >> x >> y;
+		fin >> tmp >> y >> x;
 		q = quadrant(x, y, num_io.width, num_io.high, p);
 		input[tmp] = q;
 		count[q]++;
@@ -56,7 +56,7 @@ int main(int argc, char** argv){
 	// Num_PO
 	fin >> tmp >> Num_PO;
 	for(int i = 0; i < Num_PO; i++){
-		fin >> tmp >> x >> y;
+		fin >> tmp >> y >> x;
 		q = quadrant(x, y, num_io.width, num_io.high, p);
 		input[tmp] = q;
 		count[q]++;
